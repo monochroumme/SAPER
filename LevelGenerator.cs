@@ -11,12 +11,14 @@ public class LevelGenerator : MonoBehaviour
 
     [HideInInspector]
     public Square[,] squares;
+    [HideInInspector]
+    public Square[] bombSquares;
     GameObject parentOfSquares;
 
     void Start()
     {
         GenerateLevel(maxX, maxY, bombsAmount);
-        SquareManager.OwnStart();
+        SquareManager.instance.OwnStart();
     }
 
     public void GenerateLevel(int X, int Y, int bombs)
@@ -69,6 +71,7 @@ public class LevelGenerator : MonoBehaviour
             for (int y = 0; y < maxY; y++)
                 availableSquares.Add(squares[x, y]);
 
+        // Если параметр СоздатьНаКраях отключен, то удалить их из массива с доступными ячейками
         if (!createOnCorners)
         {
             availableSquares.RemoveAt(availableSquares.Count - 1);
@@ -77,12 +80,16 @@ public class LevelGenerator : MonoBehaviour
             availableSquares.RemoveAt(0);
         }
 
+        // Заспавнить бомбы
+        bombSquares = new Square[bombsAmount];
         for (int i = 0; i < bombsAmount; i++)
         {
-            int random = UnityEngine.Random.Range(0, availableSquares.Count);
+            int random = Random.Range(0, availableSquares.Count);
             Square randomSquare = availableSquares[random];
             availableSquares.Remove(randomSquare);
             squares[randomSquare.x, randomSquare.y].isBomb = true;
+
+            bombSquares[i] = squares[randomSquare.x, randomSquare.y];
         }
     }
 
