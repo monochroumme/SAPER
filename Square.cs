@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class Square : MonoBehaviour
 {
@@ -25,7 +26,7 @@ public class Square : MonoBehaviour
 
     void Start()
     {
-        generalColor = transform.GetComponent<Renderer>().material.color;
+        generalColor = GetComponent<Renderer>().material.color;
     }
 
     public void SetValues()
@@ -69,8 +70,10 @@ public class Square : MonoBehaviour
     {
         if (!isOpened && !isFlagged && !isShowed && GameManager.isPlaying)
         {
+            if (!GameManager.isStarted)
+                GameManager.isStarted = true;
             transform.GetChild(0).gameObject.SetActive(true);
-            gameObject.GetComponent<Renderer>().material.color = Color.white;
+            //currentColor = Color.white;
             isOpened = true;
             SquareManager.instance.OpenSquares(x, y);
 
@@ -78,17 +81,26 @@ public class Square : MonoBehaviour
             {
                 print("Game over!");
                 isBombI.gameObject.SetActive(true); // Активировать спрайт
+                StartCoroutine("AnimOnClick", Color.red);
                 Explode();
-                Invoke("ExplodeAllBombs", 0.2f);
+                Invoke("ExplodeAllBombs", 0.5f);
                 GameManager.GameOver();
                 return;
             }
             else
             {
-                // Сказать GameManager-y, что открыта ячейка без бомбы.
-                GameManager.OnOpen();
+                GameManager.OnOpen(); // Сказать GameManager-y, что открыта ячейка без бомбы.
+                StartCoroutine("AnimOnClick", Color.white);
             }
         }
+    }
+
+    IEnumerator AnimOnClick(Color toColor)
+    {
+        GetComponent<Renderer>().material.color = Color.Lerp(GetComponent<Renderer>().material.color, toColor, 0.33f);
+        yield return new WaitForSeconds(0.05f);
+        if(GetComponent<Renderer>().material.color != toColor)
+            StartCoroutine("AnimOnClick", toColor);
     }
 
     void ExplodeAllBombs()
@@ -99,24 +111,23 @@ public class Square : MonoBehaviour
     public void Show(bool win)
     {
         isShowed = true;
-        transform.GetChild(0).gameObject.SetActive(true);
-        isFlaggedI.gameObject.SetActive(false);
-        isBombI.gameObject.SetActive(true);
+        transform.GetChild(0).gameObject.SetActive(true); // Activate canvas
+        isFlaggedI.gameObject.SetActive(false); // Disable flag
+        isBombI.gameObject.SetActive(true); // Activate bomb
         if(win)
-            GetComponent<Renderer>().material.color = Color.yellow;
+            StartCoroutine("AnimOnClick", Color.yellow); //GetComponent<Renderer>().material.color = Color.yellow;
         else
-            GetComponent<Renderer>().material.color = Color.red;
+            StartCoroutine("AnimOnClick", Color.red); //GetComponent<Renderer>().material.color = Color.red;
     }
 
     public void Explode()
     {
-        if(gameObject.GetComponent<Renderer>().material.color != Color.red)
-        gameObject.GetComponent<Renderer>().material.color = Color.red;
+        if (GetComponent<Renderer>().material.color != Color.red)
+            StartCoroutine("AnimOnClick", Color.red); //GetComponent<Renderer>().material.color = Color.red;
         // Вызвать анимацию взрыва
         isBombI.GetComponent<AudioSource>().Play(); // Звук
         explosion.gameObject.SetActive(true);
         explosion.Play();
-        Destroy(explosion.gameObject, 2f);
     }
 
     void SetFlag()
@@ -129,7 +140,15 @@ public class Square : MonoBehaviour
         isBombI.gameObject.SetActive(false);
         isFlaggedI.gameObject.SetActive(!isFlaggedI.gameObject.activeSelf); // Активировать спрайт
 
-        gameObject.GetComponent<Renderer>().material.color = transform.GetComponent<Renderer>().material.color == generalColor ? new Color(1, 0.5f, 0) : generalColor;
+        Color color = GetComponent<Renderer>().material.color;
+        color = color == generalColor ? new Color(1, 0.5f, 0) : generalColor;
+        StartCoroutine("AnimOnClick", color); //GetComponent<Renderer>().material.color = GetComponent<Renderer>().material.color == generalColor ? new Color(1, 0.5f, 0) : generalColor;
         isFlagged = !isFlagged;
+
+        // Обновить UI (бомбы)
+        if (isFlagged)
+            Bomber.instance.bombsAmount--;
+        else
+            Bomber.instance.bombsAmount++;
     }
 }

@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
     public static bool isPlaying;
+    public static bool isStarted;
 	static int squaresWOBombs;
 
 	void Start()
@@ -34,5 +35,12 @@ public class GameManager : MonoBehaviour
     public static void GameOver()
     {
         // TODO GAMEOVER
+        isPlaying = false;
+
     }
+
+    //IEnumerator GameOverer()
+    //{
+
+    //}
 }

@@ -26,6 +26,7 @@ public class SquareManager : MonoBehaviour
         maxX = squares.GetLength(0);
         maxY = squares.GetLength(1);
         bombsAmount = lg.bombsAmount;
+        Bomber.instance.bombsAmount = bombsAmount;
     }
 
     public void OpenSquares(int x, int y)
@@ -68,7 +69,7 @@ public class SquareManager : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < notExploded.Count; i++) // Рандомно взрывать бомбы (кроме самой, которую открыли)
+        while(notExploded.Count > 0) // Рандомно взрывать бомбы (кроме самой, которую открыли)
         {
             int random = Random.Range(0, notExploded.Count);
             Square randomSquare = notExploded[random];
@@ -80,7 +81,7 @@ public class SquareManager : MonoBehaviour
 
     IEnumerator ExplodeBomb(Square bomb)
     {
-        yield return new WaitForSeconds(Random.Range(0.1f, 1f));
+        yield return new WaitForSeconds(Random.Range(0.2f, 1f));
         bomb.Explode();
     }
 }
