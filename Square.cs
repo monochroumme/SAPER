@@ -104,12 +104,16 @@ public class Square : MonoBehaviour
         isBombI.gameObject.SetActive(true);
         if(win)
             GetComponent<Renderer>().material.color = Color.yellow;
+        else
+            GetComponent<Renderer>().material.color = Color.red;
     }
 
     public void Explode()
     {
+        if(gameObject.GetComponent<Renderer>().material.color != Color.red)
         gameObject.GetComponent<Renderer>().material.color = Color.red;
         // Вызвать анимацию взрыва
+        isBombI.GetComponent<AudioSource>().Play(); // Звук
         explosion.gameObject.SetActive(true);
         explosion.Play();
         Destroy(explosion.gameObject, 2f);

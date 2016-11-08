@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 public class SquareManager : MonoBehaviour
 {
@@ -55,8 +56,6 @@ public class SquareManager : MonoBehaviour
             lg.bombSquares[i].Show(win);
         }
     }
-
-    Square randomSquare;
     public void ExplodeAllBombs(Square first)
     {
         List<Square> notExploded = new List<Square>();
@@ -72,16 +71,16 @@ public class SquareManager : MonoBehaviour
         for (int i = 0; i < notExploded.Count; i++) // Рандомно взрывать бомбы (кроме самой, которую открыли)
         {
             int random = Random.Range(0, notExploded.Count);
-            randomSquare = notExploded[random];
+            Square randomSquare = notExploded[random];
             notExploded.Remove(randomSquare);
             randomSquare.Show(false);
-            Invoke("ExplodeBomb", 0.2f);
-            // TODO надо взорвать именно рандомную бомбу через 0.2 сек
+            StartCoroutine("ExplodeBomb", randomSquare);
         }
     }
 
-    void ExplodeBomb()
+    IEnumerator ExplodeBomb(Square bomb)
     {
-        randomSquare.Explode();
+        yield return new WaitForSeconds(Random.Range(0.1f, 1f));
+        bomb.Explode();
     }
 }
