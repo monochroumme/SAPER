@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 public class Bomber : MonoBehaviour
 {
+    public static Bomber instance;
     Text bombT;
     int bombs;
     public int bombsAmount
@@ -18,13 +19,12 @@ public class Bomber : MonoBehaviour
         }
     }
 
-    public static Bomber instance;
 
-    void Start()
+    void Awake()
     {
+        instance = this;
         bombT = GetComponent<Text>();
         ChangeValue();
-        instance = this;
     }
 
     public void ChangeValue()

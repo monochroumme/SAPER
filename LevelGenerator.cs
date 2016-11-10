@@ -15,7 +15,7 @@ public class LevelGenerator : MonoBehaviour
     public Square[] bombSquares;
     GameObject parentOfSquares;
 
-    void Start()
+    public void StartGenerating()
     {
         GenerateLevel(maxX, maxY, bombsAmount);
         SquareManager.instance.OwnStart();

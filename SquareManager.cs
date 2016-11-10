@@ -41,7 +41,7 @@ public class SquareManager : MonoBehaviour
 
                 for (int Y = -1; Y <= 1; Y++)
                 {
-                    if (y + Y < 0 || y + Y >= maxY || x + X == 0 && y + Y == 0)
+                    if (y + Y < 0 || y + Y >= maxY) // || x + X == 0 && y + Y == 0)
                         continue;
 
                     squares[x + X, y + Y].Open();

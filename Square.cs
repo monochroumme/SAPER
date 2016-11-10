@@ -68,12 +68,11 @@ public class Square : MonoBehaviour
 
     public void Open()
     {
-        if (!isOpened && !isFlagged && !isShowed && GameManager.isPlaying)
+        if (!isOpened && !isFlagged && !isShowed && GameManager.instance.isPlaying)
         {
-            if (!GameManager.isStarted)
-                GameManager.isStarted = true;
+            if (!GameManager.instance.isStarted)
+                GameManager.instance.isStarted = true;
             transform.GetChild(0).gameObject.SetActive(true);
-            //currentColor = Color.white;
             isOpened = true;
             SquareManager.instance.OpenSquares(x, y);
 
@@ -84,12 +83,12 @@ public class Square : MonoBehaviour
                 StartCoroutine("AnimOnClick", Color.red);
                 Explode();
                 Invoke("ExplodeAllBombs", 0.5f);
-                GameManager.GameOver();
+                GameManager.instance.GameOver();
                 return;
             }
             else
             {
-                GameManager.OnOpen(); // Сказать GameManager-y, что открыта ячейка без бомбы.
+                GameManager.instance.OnOpen(); // Сказать GameManager-y, что открыта ячейка без бомбы.
                 StartCoroutine("AnimOnClick", Color.white);
             }
         }
@@ -132,7 +131,7 @@ public class Square : MonoBehaviour
 
     void SetFlag()
     {
-        if (isOpened || !GameManager.isPlaying)
+        if (isOpened || !GameManager.instance.isPlaying)
             return;
 
         transform.GetChild(0).gameObject.SetActive(!transform.GetChild(0).gameObject.activeSelf);
@@ -142,7 +141,7 @@ public class Square : MonoBehaviour
 
         Color color = GetComponent<Renderer>().material.color;
         color = color == generalColor ? new Color(1, 0.5f, 0) : generalColor;
-        StartCoroutine("AnimOnClick", color); //GetComponent<Renderer>().material.color = GetComponent<Renderer>().material.color == generalColor ? new Color(1, 0.5f, 0) : generalColor;
+        StartCoroutine("AnimOnClick", color);
         isFlagged = !isFlagged;
 
         // Обновить UI (бомбы)

@@ -1,46 +1,69 @@
 ﻿using UnityEngine;
-using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public static bool isPlaying;
-    public static bool isStarted;
-	static int squaresWOBombs;
+    public static GameManager instance;
+    public GameObject firework;
+    public GameObject winT;
+    public GameObject goT;
+    [HideInInspector]
+    public bool isPlaying;
+    [HideInInspector]
+    public bool isStarted;
+    int squaresWOBombs;
 
-	void Start()
-	{
+    void Awake()
+    {
+        instance = this;
+    }
+
+    void Start()
+    {
+        GameObject.Find("Porter").GetComponent<Porter>().SetValues();
         isPlaying = true;
-		LevelGenerator lg = GetComponent<LevelGenerator>();
-		squaresWOBombs = lg.maxX * lg.maxY - lg.bombsAmount;
-	}
+        LevelGenerator lg = GetComponent<LevelGenerator>();
+        squaresWOBombs = lg.maxX * lg.maxY - lg.bombsAmount;
+    }
 
-	public static void OnOpen()
-	{
-		squaresWOBombs--;
+    public void OnOpen()
+    {
+        squaresWOBombs--;
 
-		if(squaresWOBombs <= 0)
-		{
-			// Показать места с бомбами V и сделать небольшую штучку поздравительную, а потом включить WIN GUI.
-			SquareManager.instance.ShowBombSquares(true);
+        if(squaresWOBombs <= 0)
+        {
+            // Показать места с бомбами V и сделать небольшую штучку поздравительную, а потом включить WIN GUI.
+            SquareManager.instance.ShowBombSquares(true);
             Win();
-		}
-	}
-
-    static void Win()
-    {
-        // TODO WIN
-        isPlaying = false;
+        }
     }
 
-    public static void GameOver()
+    public void Win()
     {
-        // TODO GAMEOVER
         isPlaying = false;
-
+        firework.SetActive(true);
+        winT.SetActive(true);
     }
 
-    //IEnumerator GameOverer()
-    //{
+    public void GameOver()
+    {
+        isPlaying = false;
+        goT.SetActive(true);
+    }
 
-    //}
+    public void Restart()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void GoBack()
+    {
+        DestroyPorter();
+        SceneManager.LoadScene("Menu");
+    }
+
+    void DestroyPorter()
+    {
+        DestroyImmediate(GameObject.Find("Porter"));
+    }
 }

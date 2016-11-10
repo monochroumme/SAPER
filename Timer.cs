@@ -13,7 +13,7 @@ public class Timer : MonoBehaviour
 
 	void Update ()
 	{
-		if (GameManager.isStarted && GameManager.isPlaying)
+		if (GameManager.instance.isStarted && GameManager.instance.isPlaying)
 		{
 			countdown += Time.deltaTime;
 			time.text = string.Format("{00:00:00}", countdown);
