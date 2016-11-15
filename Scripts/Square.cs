@@ -79,6 +79,8 @@ public class Square : MonoBehaviour
             if (isBomb)
             {
                 print("Game over!");
+                // Повернуть на 90 и на -90
+                transform.localRotation = Quaternion.Euler(-transform.localRotation.x, 0, 0);
                 isBombI.gameObject.SetActive(true); // Активировать спрайт
                 GetComponent<Renderer>().material.color = Color.red;
                 Explode();
@@ -89,6 +91,8 @@ public class Square : MonoBehaviour
             else
             {
                 GameManager.instance.OnOpen(); // Сказать GameManager-y, что открыта ячейка без бомбы.
+                GetComponent<Animator>().enabled = true;
+                GetComponent<Animator>().Play("SquareOpen"); // Анимация открытия
                 GetComponent<Renderer>().material.color = Color.white;
             }
         }
@@ -125,6 +129,9 @@ public class Square : MonoBehaviour
     {
         if (isOpened || !GameManager.instance.isPlaying)
             return;
+
+        // Повернуть на 90 и на -90
+        transform.localRotation = Quaternion.Euler(-transform.localRotation.x, 0, 0);
 
         transform.GetChild(0).gameObject.SetActive(!transform.GetChild(0).gameObject.activeSelf);
         transform.GetChild(0).GetChild(0).gameObject.SetActive(!transform.GetChild(0).GetChild(0).gameObject.activeSelf);

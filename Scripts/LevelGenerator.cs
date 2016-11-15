@@ -130,7 +130,7 @@ public class LevelGenerator : MonoBehaviour
 
             for (int y = -1; y <= 1; y++)
             {
-                if (square.y + y < 0 || square.y + y >= maxY || square.x + x == 0 && square.y + y == 0)
+                if (square.y + y < 0 || square.y + y >= maxY)
                     continue;
 
                 if (squares[square.x + x, square.y + y].isBomb)
