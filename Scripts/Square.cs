@@ -20,7 +20,11 @@ public class Square : MonoBehaviour
     bool isFlagged = false;
     bool isShowed = false;
 
+    float holdTime = 0.8f;
+    float acumTime = 0;
+
     Ray ray;
+    Ray mRay;
     RaycastHit hit;
     Color generalColor;
 
@@ -49,9 +53,22 @@ public class Square : MonoBehaviour
     void Update()
     {
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out hit))
+        if(Input.touchCount > 0)
+            mRay = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
+
+        if (Input.touchCount > 0)
         {
-            if (Input.GetMouseButtonDown(1))
+            acumTime += Input.GetTouch(0).deltaTime;
+
+            if (Input.GetTouch(0).phase == TouchPhase.Ended)
+            {
+                acumTime = 0;
+            }
+        }
+
+        if (Physics.Raycast(ray, out hit) || Physics.Raycast(mRay, out hit))
+        {
+            if (Input.GetMouseButtonDown(1) || acumTime >= holdTime)
             {
                 if(hit.collider.gameObject == gameObject)
                 {
@@ -78,7 +95,6 @@ public class Square : MonoBehaviour
 
             if (isBomb)
             {
-                print("Game over!");
                 // Повернуть на 90 и на -90
                 transform.localRotation = Quaternion.Euler(-transform.localRotation.x, 0, 0);
                 isBombI.gameObject.SetActive(true); // Активировать спрайт

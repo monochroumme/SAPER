@@ -5,8 +5,6 @@ public class Porter : MonoBehaviour
 {
     public int maxX, maxY;
     public int bombsAmount;
-    public Vector3 cameraOffset;
-    public float cameraSize;
     public bool createOnCorners;
 
     void Awake()
@@ -22,7 +20,5 @@ public class Porter : MonoBehaviour
         lg.bombsAmount = bombsAmount;
         lg.createBombsOnCorners = createOnCorners;
         lg.StartGenerating();
-        Camera.main.orthographicSize = cameraSize;
-        Camera.main.transform.position = cameraOffset;
     }
 }

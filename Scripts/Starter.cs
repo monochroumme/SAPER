@@ -15,8 +15,6 @@ public class Starter : MonoBehaviour
         porter.maxX = 9;
         porter.maxY = 9;
         porter.bombsAmount = 10;
-        porter.cameraOffset = new Vector3(0, 0.7f, -10f);
-        porter.cameraSize = 7.65f;
         porter.createOnCorners = false;
         LoadLevel();
     }
@@ -26,8 +24,6 @@ public class Starter : MonoBehaviour
         porter.maxX = 12;
         porter.maxY = 12;
         porter.bombsAmount = 30;
-        porter.cameraOffset = new Vector3(0, 0.5f, -10f);
-        porter.cameraSize = 10.3f;
         porter.createOnCorners = true;
         LoadLevel();
     }
@@ -37,8 +33,6 @@ public class Starter : MonoBehaviour
         porter.maxX = 14;
         porter.maxY = 18;
         porter.bombsAmount = 50;
-        porter.cameraOffset = new Vector3(0, 0.5f, -10f);
-        porter.cameraSize = 12f;
         porter.createOnCorners = true;
         LoadLevel();
     }
