@@ -20,8 +20,9 @@ public class Square : MonoBehaviour
     bool isFlagged = false;
     bool isShowed = false;
 
-    float holdTime = 0.8f;
-    float acumTime = 0;
+    float holdTime = 0.3f;
+
+    float lastTapTime;
 
     Ray ray;
     Ray mRay;
@@ -50,37 +51,21 @@ public class Square : MonoBehaviour
             bombsAroundText.color = Color.red;
     }
 
-    void Update()
-    {
-        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if(Input.touchCount > 0)
-            mRay = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
-
-        if (Input.touchCount > 0)
-        {
-            acumTime += Input.GetTouch(0).deltaTime;
-
-            if (Input.GetTouch(0).phase == TouchPhase.Ended)
-            {
-                acumTime = 0;
-            }
-        }
-
-        if (Physics.Raycast(ray, out hit) || Physics.Raycast(mRay, out hit))
-        {
-            if (Input.GetMouseButtonDown(1) || acumTime >= holdTime)
-            {
-                if(hit.collider.gameObject == gameObject)
-                {
-                    SetFlag();
-                }
-            }
-        }
-    }
-
     void OnMouseDown()
     {
-        Open();
+        lastTapTime = Time.time;
+    }
+
+    void OnMouseUp()
+    {
+        if(Time.time - lastTapTime < holdTime)
+        {
+            Open();
+        }
+        else
+        {
+            SetFlag();
+        }
     }
 
     public void Open()
